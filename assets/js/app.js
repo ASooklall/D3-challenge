@@ -38,7 +38,8 @@ var chartGroup = svg.append("g")
 
 // set initial param
 var chosenXAxis = "poverty";
-console.log(chosenXAxis)
+// console.log(chosenXAxis)
+
 // function used for updating x-scale var upon click on axis label
 function xScale(data, chosenXAxis) {
     // create scales
@@ -77,17 +78,20 @@ function xScale(data, chosenXAxis) {
   function updateToolTip(chosenXAxis, circlesGroup) {
   
     if (chosenXAxis === "poverty") {
-      var label = "In Poverty (%):";
+      var label = "In Poverty (%): ";
+    }
+    else if (chosenXAxis === "age") {
+        var label = "Age (Median): ";
     }
     else {
-      var label = "Household Income (Median)";
+      var label = "Household Income (Median): $";
     }
   
     var toolTip = d3.tip()
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(d => {
-        return (`Test <hr>${d.poverty}<hr> ${d[chosenXAxis]}`);
+        return (`Test <br>${d.poverty}<br>${label}${d[chosenXAxis]}`);
       });
   
     circlesGroup.call(toolTip);
@@ -156,6 +160,15 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
       .attr("fill", "pink")
       .attr("opacity", ".5");
   
+    // label within circle
+     var circleLabels = chartGroup.selectAll("text")
+     .data(censusData)
+     .enter()
+     .append("text")
+     .text( d => {d.name})
+     .attr("x", d => xLinearScale(d[chosenXAxis]))
+     .attr("y", d => yLinearScale(d.healthcare));
+
     // Create group for  2 x- axis labels
     var labelsGroup = chartGroup.append("g")
       .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -165,14 +178,21 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
       .attr("y", 20)
       .attr("value", "poverty") // value to grab for event listener
       .classed("active", true)
-      .text("X Label 1");
+      .text("In Poverty (%)");
   
-    var incomeLabel = labelsGroup.append("text")
+    var ageLabel = labelsGroup.append("text")
       .attr("x", 0)
       .attr("y", 40)
+      .attr("value", "age") // value to grab for event listener
+      .classed("inactive", true)
+      .text("Age (Median)");
+      
+    var incomeLabel = labelsGroup.append("text")
+      .attr("x", 0)
+      .attr("y", 60)
       .attr("value", "income") // value to grab for event listener
       .classed("inactive", true)
-      .text("X Label 2");
+      .text("Household Income (Median)");
   
     // append y axis
     chartGroup.append("text")
@@ -216,6 +236,20 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
             incomeLabel
               .classed("active", true)
               .classed("inactive", false);
+            ageLabel
+              .classed("active", false)
+              .classed("inactive", true);
+            povertyLabel
+              .classed("active", false)
+              .classed("inactive", true);
+          }
+          else if (chosenXAxis === "age") {
+            incomeLabel
+              .classed("active", false)
+              .classed("inactive", true);
+            ageLabel
+              .classed("active", true)
+              .classed("inactive", false);
             povertyLabel
               .classed("active", false)
               .classed("inactive", true);
@@ -224,18 +258,22 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
             incomeLabel
               .classed("active", false)
               .classed("inactive", true);
+            ageLabel
+              .classed("active", false)
+              .classed("inactive", true);
             povertyLabel
               .classed("active", true)
               .classed("inactive", false);
           }
         }
       });
+
   }).catch(function(error) {
     console.log(error);
   });
   
 
-  
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Copyright (C) Andrew Sooklall 2019 /////////////////////////////
 /////////////////////////////////////// End of Script ////////////////////////////////////////
