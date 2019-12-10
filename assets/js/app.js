@@ -38,7 +38,7 @@ var chartGroup = svg.append("g")
 
 // set initial param
 var chosenXAxis = "poverty";
-
+console.log(chosenXAxis)
 // function used for updating x-scale var upon click on axis label
 function xScale(data, chosenXAxis) {
     // create scales
@@ -51,7 +51,7 @@ function xScale(data, chosenXAxis) {
     return xLinearScale;
   
   }
-  
+
   // update xAxis var when label is clicked
   function renderAxes(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
@@ -110,7 +110,7 @@ function xScale(data, chosenXAxis) {
 //////////////////////////////////////////
 
   // Retrieve data from the CSV file and execute everything below
-d3.csv("data.csv").then(function(censusData, err) {
+d3.csv("assets/data/data.csv").then(function(censusData, err) {
     if (err) throw err;
   
     // parse data
