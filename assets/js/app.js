@@ -99,6 +99,16 @@ function yScale(data, chosenYAxis) {
       .attr("cy", d => newYScale(d[chosenYAxis]));
   
     return circlesGroup;
+  }  
+  // update circles group with transitions
+  function renderLabels(cLabels, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+  
+    cLabels.transition()
+      .duration(1000)
+      .attr("x", d => newXScale(d[chosenXAxis]))
+      .attr("y", d => newYScale(d[chosenYAxis]));
+  
+    return cLabels;
   }
   
   // update circles group with new tooltip
@@ -215,7 +225,7 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
       .attr("opacity", ".5");
   
     // label within circle
-    chartGroup.selectAll(".circles")
+    var cLabels = chartGroup.selectAll(".circles")
      .append("text")
      .text( d => d.abbr)
      .attr("text-anchor", "middle")
@@ -313,6 +323,9 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
   
           // updates tooltips with new info
           circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
+
+          // update labels on circles
+          cLabels = renderLabels(cLabels, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
           // changes classes to change bold text
           if (chosenXAxis === "income") {
@@ -374,6 +387,9 @@ d3.csv("assets/data/data.csv").then(function(censusData, err) {
   
           // updates tooltips with new info
           circlesGroup = updateToolTip(circlesGroup, chosenYAxis);
+          
+          // update labels on circles
+          cLabels = renderLabels(cLabels, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
           // changes classes to change bold text
           if (chosenYAxis === "smokes") {
