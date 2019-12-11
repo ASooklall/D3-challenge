@@ -50,3 +50,9 @@ body {
 .scatter{
   padding-bottom: 10px;
 }
+
+.tooltip{
+  background-color: #e7d189;
+  text-align:center;
+  /* padding: 10px; */
+}
